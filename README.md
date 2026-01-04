@@ -1,100 +1,71 @@
-# CLI Todo Application
+# 🚀 The Evolution of Todo: Mastering Spec-Driven Development
 
-A simple command-line interface todo application with in-memory storage, built as part of The Evolution of Todo Project.
+### *From CLI to a Cloud-Native AI-Powered Ecosystem* 🤖✨
 
-## Features
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Build: Success](https://img.shields.io/badge/Build-Passing-brightgreen.svg)]()
+[![AI-Native: Spec--Driven](https://img.shields.io/badge/AI--Native-Spec--Driven-blue.svg)]()
 
-- Add, view, update, delete, and mark tasks as complete
-- In-memory storage (no persistent data)
-- Simple CLI interface
-- User-friendly error messages
+## 🌟 Project Vision
+This project is not just a Todo application; it is a comprehensive blueprint for **AI-Native Software Engineering**. Following the **Nine Pillars of AI-Driven Development**, I have evolved a simple CLI tool into a sophisticated, Cloud-Native AI Chatbot. The core of this project revolves around **Spec-Driven Development (SDD)**, where architecture precedes code.
 
-## Prerequisites
 
-- Python 3.13+
-- UV package manager or pip
+---
 
-## Dependencies
+## 🛠 The 5 Evolutionary Phases (Full Implementation)
 
-This project requires the following external dependencies:
+### 🔹 Phase 1: The Core Foundation (Console CLI)
+* **Focus:** Core logic and CRUD operations.
+* **Tech:** Python/Node.js CLI.
+* **Achievement:** Established the initial **Single Source of Truth (SSoT)** for task management.
 
-- `dateparser` - for natural language date parsing (e.g., "tomorrow at 3pm", "next Monday")
+### 🔹 Phase 2: Full-Stack Web Transformation
+* **Focus:** Scalable architecture and user isolation.
+* **Tech:** **Next.js 15+**, **FastAPI**, **Neon Serverless PostgreSQL**.
+* **Key Feature:** Secure authentication using **Better Auth** with JWT-based session management.
 
-Install dependencies with:
-```bash
-pip install -r requirements.txt
-```
+### 🔹 Phase 3: Multi-Agent & Reusable Intelligence
+* **Focus:** Autonomy and Modular AI.
+* **System:** Integrated **Spec-Kit Plus** for advanced orchestration.
+* **Innovation:** Developed **Sub-Agents** and specialized **"Skills"** for autonomous workflows.
 
-## Installation
+### 🔹 Phase 4: AI Chatbot & Conversational UI
+* **Focus:** Human-Centric AI Interaction.
+* **System:** Transitioned from static forms to a dynamic **Conversational AI Interface**.
+* **Feature:** NLP-driven task management for a personalized user experience.
 
-1. Clone the repository
-2. Navigate to the project directory
-3. Install dependencies: `uv sync`
-4. Run the application: `uv run python src/main.py`
+### 🔹 Phase 5: Cloud-Native & Global Scaling
+* **Focus:** Infrastructure as Code (IaC) & Reliability.
+* **Tech:** **Docker** for containerization and **Kubernetes (K8s)** for orchestration.
 
-## Usage
+---
 
-The application provides a command-line interface for managing your todo tasks:
+## 🏗 Key Engineering Concepts
+This repository implements advanced principles as outlined in the Hackathon specifications:
 
-- `add "task title" ["optional description"]` - Add a new task
-- `list` - View all tasks
-- `complete <task_id>` - Mark a task as complete
-- `update <task_id> "new title" ["new description"]` - Update task details
-- `delete <task_id>` - Delete a task
-- `help` - Show available commands
-- `quit` or `exit` - Exit the application
+* **Spec-Driven Development (SDD):** Every feature is defined in `/specs` before implementation by **Claude Code**.
+* **Reusable Intelligence:** Training AI on specific logic patterns and architectural rules.
+* **Model Context Protocol (MCP):** Enabling agents to interact directly with tools and databases.
+* **Architectural Integrity:** Utilizing **SQLModel (ORM)** for type-safe database interactions.
 
-## Natural Language Date Support
+---
 
-The application supports natural language date parsing for due dates using the `--due` flag:
+## 📂 Repository Structure
+```text
+├── .spec-kit/        # Spec-Driven Development Configuration
+├── frontend/         # Next.js 15 App (App Router)
+├── backend/          # FastAPI & SQLModel Integration
+├── specs/            # Project Blueprints (The Source of Truth)
+├── k8s/              # Kubernetes Deployment Manifests
+└── CLAUDE.md         # Forwarding to AGENTS.md
 
-- `add "Meeting" "Team sync" --due "tomorrow at 3pm"`
-- `add "Grocery" "Buy milk" --due "in 2 days"`
-- `add "Review" "Project review" --due "next Monday"`
+## 🧰 Tech Stack
 
-All date-related functionality is powered by the dateparser library.
-
-## Development
-
-This project was developed using spec-driven development with AI assistance. The implementation follows clean code principles and is designed with future evolution in mind.
-
-### Architecture
-
-The application follows a clean architecture pattern:
-- Models: Task definition
-- Services: TaskManager with business logic
-- UI: CLI interface
-- Utils: Helper functions
-
-## Project Structure
-
-```
-src/
-├── main.py              # Main entry point with CLI loop
-├── models/
-│   └── task.py          # Task class definition
-├── services/
-│   └── task_manager.py  # CRUD operations for tasks
-├── ui/
-│   └── cli.py           # CLI interface functions
-└── utils/
-    └── helpers.py       # Utility functions (ID generation, validation)
-```
-
-## Testing
-
-Run tests with: `python -m pytest tests/`
-
-## Contributing
-
-This project is part of a spec-driven development experiment. All features derive from specifications, and code is generated with AI assistance.
-
-## Running the Application
-
-To start the CLI Todo Application, run:
-
-```bash
-python src/main.py
-```
-
-The application will start and display a welcome message. You can then enter commands to manage your tasks.
+| Category | Technology |
+| :--- | :--- |
+| **AI Agent** | Claude Code / Spec-Kit Plus |
+| **Frontend** | Next.js 15, Tailwind CSS, Shadcn/UI |
+| **Backend** | Python FastAPI, SQLModel, Pydantic |
+| **Database** | Neon Serverless PostgreSQL |
+| **Auth** | Better Auth |
+| **DevOps** | Docker, Kubernetes (K8s) |
