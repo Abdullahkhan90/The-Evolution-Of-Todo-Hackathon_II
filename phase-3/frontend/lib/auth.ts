@@ -43,6 +43,11 @@ async function signup(arg1: any, arg2?: any) {
   return res.data
 }
 
+// alias used in some parts of the codebase
+async function register(arg1: any, arg2?: any) {
+  return signup(arg1, arg2)
+}
+
 function logout() {
   try {
     if (typeof window !== 'undefined') {
@@ -96,6 +101,7 @@ function getCurrentUserId(): string | null {
 export const authService = {
   login,
   signup,
+  register,
   logout,
   getToken,
   isAuthenticated,
