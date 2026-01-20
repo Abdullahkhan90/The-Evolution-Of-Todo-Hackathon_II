@@ -5,7 +5,17 @@ type Credentials = {
   password: string
 }
 
-async function login({ email, password }: Credentials) {
+// Support two call styles: login({email,password}) and login(email,password)
+async function login(arg1: any, arg2?: any) {
+  let email: string
+  let password: string
+  if (typeof arg1 === 'string' && typeof arg2 === 'string') {
+    email = arg1
+    password = arg2
+  } else {
+    email = arg1?.email
+    password = arg1?.password
+  }
   const res = await apiClient.post('/auth/login', { email, password })
   const token = res?.data?.token
   if (typeof window !== 'undefined' && token) {
@@ -14,7 +24,17 @@ async function login({ email, password }: Credentials) {
   return res.data
 }
 
-async function signup({ email, password }: Credentials) {
+// Same flexibility for signup
+async function signup(arg1: any, arg2?: any) {
+  let email: string
+  let password: string
+  if (typeof arg1 === 'string' && typeof arg2 === 'string') {
+    email = arg1
+    password = arg2
+  } else {
+    email = arg1?.email
+    password = arg1?.password
+  }
   const res = await apiClient.post('/auth/signup', { email, password })
   const token = res?.data?.token
   if (typeof window !== 'undefined' && token) {
