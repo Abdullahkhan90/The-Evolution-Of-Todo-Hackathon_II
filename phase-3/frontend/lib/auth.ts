@@ -1,4 +1,3 @@
-
 import { apiClient } from '@/lib/api';
 
 class AuthService {
@@ -59,4 +58,3 @@ class AuthService {
 
 export const authService = new AuthService();
 export default authService;
-

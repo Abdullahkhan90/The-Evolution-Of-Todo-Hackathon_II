@@ -1,4 +1,3 @@
-
 import axios, { AxiosInstance } from 'axios';
 
 import { Task } from '@/types/task';
@@ -130,4 +129,3 @@ class ApiClient {
 
 export const apiClient = new ApiClient();
 export default apiClient;
-
