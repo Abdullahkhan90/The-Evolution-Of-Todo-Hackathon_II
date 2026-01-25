@@ -27,8 +27,8 @@ class ChatResponse(BaseModel):
     timestamp: datetime = datetime.utcnow()
 
 
-@router.post("/conversation")
-def chat_endpoint(chat_request: ChatRequest, current_user_id: str = Depends(get_current_user)):
+@router.post("/{user_id}/chat")
+def chat_endpoint(user_id: str, chat_request: ChatRequest, current_user_id: str = Depends(get_current_user)):
     """
     Main chat endpoint for the Todo AI Chatbot.
     Implements stateless architecture with conversation history persisted to database.
@@ -37,13 +37,21 @@ def chat_endpoint(chat_request: ChatRequest, current_user_id: str = Depends(get_
     # Add detailed logging
     print(f"DEBUG: Received chat request - message: '{chat_request.message}', conversation_id: {chat_request.conversation_id}")
     print(f"DEBUG: Current user ID from JWT: {current_user_id}")
+    print(f"DEBUG: User ID from path: {user_id}")
+
+    # Verify that the user_id in the path matches the authenticated user
+    if str(current_user_id) != str(user_id):
+        raise HTTPException(
+            status_code=403,
+            detail="Not authorized to access chat for this user"
+        )
 
     try:
-        # Use the authenticated user ID from JWT
-        user_id = UUID(current_user_id)
-        print(f"DEBUG: Parsed user_id as UUID: {user_id}")
+        # Use the authenticated user ID from JWT (which should match the path)
+        user_id_uuid = UUID(user_id)
+        print(f"DEBUG: Parsed user_id as UUID: {user_id_uuid}")
     except ValueError as e:
-        print(f"ERROR: Invalid user_id format from JWT: {current_user_id}, error: {e}")
+        print(f"ERROR: Invalid user_id format: {user_id}, error: {e}")
         raise HTTPException(status_code=400, detail="Invalid user ID format")
 
     # Validate the request data
@@ -53,7 +61,7 @@ def chat_endpoint(chat_request: ChatRequest, current_user_id: str = Depends(get_
     if not user_message.strip():
         raise HTTPException(status_code=400, detail="Message cannot be empty")
 
-    print(f"DEBUG: Processing message: '{user_message}' for user: {user_id}")
+    print(f"DEBUG: Processing message: '{user_message}' for user: {user_id_uuid}")
 
     # Get database session
     from app.database.database import engine
@@ -61,10 +69,10 @@ def chat_endpoint(chat_request: ChatRequest, current_user_id: str = Depends(get_
         try:
             # Validate that user exists
             from ..models.task import User
-            user_exists = session.get(User, user_id)
+            user_exists = session.get(User, user_id_uuid)
             if not user_exists:
-                print(f"ERROR: User with ID {user_id} not found")
-                raise HTTPException(status_code=404, detail=f"User with ID {user_id} not found. Please register first.")
+                print(f"ERROR: User with ID {user_id_uuid} not found")
+                raise HTTPException(status_code=404, detail=f"User with ID {user_id_uuid} not found. Please register first.")
 
             print(f"DEBUG: User exists: {user_exists.email}")
 
@@ -78,14 +86,14 @@ def chat_endpoint(chat_request: ChatRequest, current_user_id: str = Depends(get_
                 conversation = session.get(Conversation, conv_uuid)
                 if not conversation:
                     # Create new conversation if ID doesn't exist
-                    conversation = Conversation(user_id=user_id)
+                    conversation = Conversation(user_id=user_id_uuid)
                     session.add(conversation)
                     session.commit()
                     session.refresh(conversation)
                     print(f"DEBUG: Created new conversation with ID: {conversation.id}")
             else:
                 # Create new conversation
-                conversation = Conversation(user_id=user_id)
+                conversation = Conversation(user_id=user_id_uuid)
                 session.add(conversation)
                 session.commit()
                 session.refresh(conversation)
@@ -94,7 +102,7 @@ def chat_endpoint(chat_request: ChatRequest, current_user_id: str = Depends(get_
 
             # Store user message in database
             user_msg = Message(
-                user_id=user_id,
+                user_id=user_id_uuid,
                 conversation_id=conversation.id,
                 role="user",
                 content=user_message
@@ -116,7 +124,7 @@ def chat_endpoint(chat_request: ChatRequest, current_user_id: str = Depends(get_
                 print(f"DEBUG: Detected list tasks command")
                 # Get all tasks for the user
                 all_user_tasks = session.exec(
-                    select(Task).where(Task.user_id == user_id)
+                    select(Task).where(Task.user_id == user_id_uuid)
                 ).all()
 
                 if all_user_tasks:
@@ -139,7 +147,7 @@ def chat_endpoint(chat_request: ChatRequest, current_user_id: str = Depends(get_
 
                         # Get all tasks for the user
                         all_user_tasks = session.exec(
-                            select(Task).where(Task.user_id == user_id)
+                            select(Task).where(Task.user_id == user_id_uuid)
                         ).all()
 
                         if 0 <= task_index < len(all_user_tasks):
@@ -177,7 +185,7 @@ def chat_endpoint(chat_request: ChatRequest, current_user_id: str = Depends(get_
                     if potential_title:
                         # Get all tasks for the user
                         all_user_tasks = session.exec(
-                            select(Task).where(Task.user_id == user_id)
+                            select(Task).where(Task.user_id == user_id_uuid)
                         ).all()
 
                         # Show all tasks for debugging
@@ -229,7 +237,7 @@ def chat_endpoint(chat_request: ChatRequest, current_user_id: str = Depends(get_
                     else:
                         # If we couldn't extract a title, return helpful message
                         all_user_tasks = session.exec(
-                            select(Task).where(Task.user_id == user_id)
+                            select(Task).where(Task.user_id == user_id_uuid)
                         ).all()
 
                         if all_user_tasks:
@@ -261,7 +269,7 @@ def chat_endpoint(chat_request: ChatRequest, current_user_id: str = Depends(get_
                     # Check if a similar task already exists to avoid duplicates
                     existing_task = session.exec(
                         select(Task).where(
-                            Task.user_id == user_id,
+                            Task.user_id == user_id_uuid,
                             Task.title.ilike(f"%{extracted_task}%")
                         )
                     ).first()
@@ -269,7 +277,7 @@ def chat_endpoint(chat_request: ChatRequest, current_user_id: str = Depends(get_
                     if not existing_task:
                         task = Task(
                             title=extracted_task,
-                            user_id=user_id,
+                            user_id=user_id_uuid,
                             completed=False
                         )
                         session.add(task)
@@ -355,7 +363,7 @@ def chat_endpoint(chat_request: ChatRequest, current_user_id: str = Depends(get_
 
             # Store assistant response in database
             assistant_msg = Message(
-                user_id=user_id,
+                user_id=user_id_uuid,
                 conversation_id=conversation.id,
                 role="assistant",
                 content=assistant_response
@@ -383,7 +391,7 @@ def chat_endpoint(chat_request: ChatRequest, current_user_id: str = Depends(get_
             # Store fallback response in database
             try:
                 assistant_msg = Message(
-                    user_id=user_id,
+                    user_id=user_id_uuid,
                     conversation_id=conversation.id,
                     role="assistant",
                     content=fallback_response

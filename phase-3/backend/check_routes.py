@@ -7,8 +7,10 @@ for route in app.routes:
             print(f"Found chat route: {route.methods} {route.path}")
         elif 'conversation' in route.path.lower():
             print(f"Found conversation route: {route.methods} {route.path}")
+        elif 'tasks' in route.path.lower():
+            print(f"Found tasks route: {route.methods} {route.path}")
     elif hasattr(route, 'path'):
-        if 'chat' in route.path.lower() or 'conversation' in route.path.lower():
+        if 'chat' in route.path.lower() or 'conversation' in route.path.lower() or 'tasks' in route.path.lower():
             print(f"Found route: {route.path}")
 
 print("\nAll routes:")

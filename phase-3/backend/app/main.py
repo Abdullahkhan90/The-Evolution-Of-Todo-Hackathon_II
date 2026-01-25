@@ -8,11 +8,13 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+print("Creating FastAPI app...")
 app = FastAPI(
     title="Todo API",
     description="A simple todo application API with user authentication",
     version="1.0.0"
 )
+print("FastAPI app created successfully")
 
 # Add CORS middleware
 app.add_middleware(
@@ -29,10 +31,15 @@ def on_startup():
     create_db_and_tables()
 
 # Include routers
-app.include_router(tasks.router, prefix="/api/{user_id}", tags=["tasks"])
+print("Including routers...")
+app.include_router(tasks.router, prefix="/api/users", tags=["tasks"])
+print("Tasks router included")
 app.include_router(users.router, prefix="/api/users", tags=["users"])
+print("Users router included")
 app.include_router(todo.router, prefix="/api/todos", tags=["todos"])
-app.include_router(chat.router, prefix="/api/chat", tags=["chat"])
+print("Todo router included")
+app.include_router(chat.router, prefix="/api", tags=["chat"])
+print("Chat router included")
 
 @app.get("/")
 def read_root():
