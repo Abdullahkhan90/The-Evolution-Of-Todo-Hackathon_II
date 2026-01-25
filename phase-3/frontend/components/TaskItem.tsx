@@ -4,9 +4,10 @@ interface TaskItemProps {
   task: Task;
   onEdit: (task: Task) => void;
   onDelete: (taskId: string) => void;
+  onComplete: (taskId: string) => void;
 }
 
-export default function TaskItem({ task, onEdit, onDelete }: TaskItemProps) {
+export default function TaskItem({ task, onEdit, onDelete, onComplete }: TaskItemProps) {
   const formatDate = (dateString: string) => {
     const options: Intl.DateTimeFormatOptions = {
       year: 'numeric',
@@ -35,9 +36,8 @@ export default function TaskItem({ task, onEdit, onDelete }: TaskItemProps) {
             <input
               type="checkbox"
               checked={task.completed}
-              onChange={() => {}}
+              onChange={() => onComplete(task.id)}
               className="h-4 w-4 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500"
-              disabled
             />
             <p className={`ml-4 text-sm font-medium ${
               task.completed ? 'text-gray-500 line-through' : 'text-gray-900'
