@@ -59,7 +59,7 @@ class ApiClient {
   // Authentication helpers (used by some callers)
   async login(email: string, password: string) {
     const res = await this.client.post('/auth/login', { email, password });
-    const token = res?.data?.token;
+    const token = res?.data?.access_token; // Backend returns access_token, not token
     if (typeof window !== 'undefined' && token) {
       localStorage.setItem('token', token);
     }
@@ -68,7 +68,7 @@ class ApiClient {
 
   async register(email: string, password: string, name?: string) {
     const res = await this.client.post('/auth/signup', { email, password, name });
-    const token = res?.data?.token;
+    const token = res?.data?.access_token; // Backend returns access_token, not token
     if (typeof window !== 'undefined' && token) {
       localStorage.setItem('token', token);
     }
