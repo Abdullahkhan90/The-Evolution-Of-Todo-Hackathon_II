@@ -40,6 +40,8 @@ This phase implements an AI-powered chatbot interface for managing todos through
 - Tailwind CSS
 - OpenAI API client
 
+- Deployed on Vercel - fixed env var cache
+
 ## Setup Instructions
 
 ### Backend Setup
