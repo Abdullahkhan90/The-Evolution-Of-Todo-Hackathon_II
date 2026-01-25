@@ -179,6 +179,7 @@ const DashboardPage = () => {
                 tasks={tasks}
                 onEdit={handleEditTask}
                 onDelete={handleDeleteTask}
+                onComplete={completeTask}
               />
             </div>
           </div>
