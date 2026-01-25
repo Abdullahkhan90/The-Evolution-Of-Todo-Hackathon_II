@@ -40,6 +40,7 @@ export default function TaskList({ tasks, onEdit, onDelete, onComplete }: TaskLi
             task={task}
             onEdit={onEdit}
             onDelete={onDelete}
+            onComplete={onComplete}
           />
         ))}
       </ul>
