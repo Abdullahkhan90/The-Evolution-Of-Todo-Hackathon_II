@@ -5,16 +5,10 @@ interface TaskListProps {
   tasks: Task[];
   onEdit: (task: Task) => void;
   onDelete: (taskId: string) => void;
-
   onComplete: (taskId: string) => void;
 }
 
 export default function TaskList({ tasks, onEdit, onDelete, onComplete }: TaskListProps) {
-
-}
-
-export default function TaskList({ tasks, onEdit, onDelete }: TaskListProps) {
-
   if (tasks.length === 0) {
     return (
       <div className="text-center py-12">
@@ -46,10 +40,7 @@ export default function TaskList({ tasks, onEdit, onDelete }: TaskListProps) {
             task={task}
             onEdit={onEdit}
             onDelete={onDelete}
-
             onComplete={onComplete}
-
-
           />
         ))}
       </ul>

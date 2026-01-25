@@ -60,7 +60,7 @@ class ApiClient {
   // Authentication helpers (used by some callers)
   async login(email: string, password: string) {
     const res = await this.client.post('/auth/login', { email, password });
-    const token = res?.data?.token;
+    const token = res?.data?.access_token; // Backend returns access_token, not token
     if (typeof window !== 'undefined' && token) {
       localStorage.setItem('token', token);
     }
@@ -69,7 +69,7 @@ class ApiClient {
 
   async register(email: string, password: string, name?: string) {
     const res = await this.client.post('/auth/signup', { email, password, name });
-    const token = res?.data?.token;
+    const token = res?.data?.access_token; // Backend returns access_token, not token
     if (typeof window !== 'undefined' && token) {
       localStorage.setItem('token', token);
     }
@@ -130,34 +130,4 @@ class ApiClient {
 
 export const apiClient = new ApiClient();
 export default apiClient;
-
-import axios from 'axios'
-
-const baseURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
-
-export const apiClient = axios.create({
-  baseURL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-})
-
-apiClient.interceptors.request.use(
-  (config) => {
-    try {
-      if (typeof window !== 'undefined') {
-        const token = localStorage.getItem('token')
-        if (token && config.headers) {
-          config.headers.Authorization = `Bearer ${token}`
-        }
-      }
-    } catch (e) {
-      // ignore in SSR
-    }
-    return config
-  },
-  (error) => Promise.reject(error)
-)
-
-export default apiClient
 
