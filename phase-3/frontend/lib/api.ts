@@ -2,6 +2,9 @@ import axios, { AxiosInstance } from 'axios';
 
 import { Task } from '@/types/task';
 
+console.log('NEXT_PUBLIC_API_URL from env:', process.env.NEXT_PUBLIC_API_URL);
+console.log('API_BASE_URL used:', API_BASE_URL);
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 // No fallback – production mein env miss hone pe crash hone do taaki pata chale
