@@ -3,9 +3,15 @@ import axios, { AxiosInstance } from 'axios';
 import { Task } from '@/types/task';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+<<<<<<< HEAD
 
 if (!API_BASE_URL) {
   console.error('NEXT_PUBLIC_API_URL is not set. API calls may fail.');
+=======
+// No fallback – production mein env miss hone pe crash hone do taaki pata chale
+if (!API_BASE_URL) {
+  console.error('NEXT_PUBLIC_API_URL is not set in environment variables!');
+>>>>>>> 9ccf789691c736f20b014494ef9b5c1094acca92
 }
 
 class ApiClient {
