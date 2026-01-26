@@ -2,7 +2,11 @@ import axios, { AxiosInstance } from 'axios';
 
 import { Task } from '@/types/task';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+// No fallback – production mein env miss hone pe crash hone do taaki pata chale
+if (!API_BASE_URL) {
+  console.error('NEXT_PUBLIC_API_URL is not set in environment variables!');
+}
 
 class ApiClient {
   private client: AxiosInstance;
