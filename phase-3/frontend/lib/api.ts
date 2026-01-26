@@ -2,12 +2,20 @@ import axios, { AxiosInstance } from 'axios';
 
 import { Task } from '@/types/task';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+
+if (!API_BASE_URL) {
+  console.error('NEXT_PUBLIC_API_URL is not set. API calls may fail.');
+}
 
 class ApiClient {
   private client: AxiosInstance;
 
   constructor() {
+    if (!API_BASE_URL) {
+      throw new Error('NEXT_PUBLIC_API_URL environment variable is required');
+    }
+    
     this.client = axios.create({ baseURL: API_BASE_URL, headers: { 'Content-Type': 'application/json' } });
 
     this.client.interceptors.request.use((config) => {
