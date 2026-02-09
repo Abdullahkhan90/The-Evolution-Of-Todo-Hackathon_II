@@ -2,7 +2,7 @@
 
 This phase implements an AI-powered chatbot interface for managing todos through natural language using MCP (Model Context Protocol) server architecture.
 
-## Features
+##    Features
 
 ### AI Chatbot
 - Natural language processing for task management
@@ -39,6 +39,8 @@ This phase implements an AI-powered chatbot interface for managing todos through
 - TypeScript
 - Tailwind CSS
 - OpenAI API client
+
+- Deployed on Vercel - fixed env var cache
 
 ## Setup Instructions
 

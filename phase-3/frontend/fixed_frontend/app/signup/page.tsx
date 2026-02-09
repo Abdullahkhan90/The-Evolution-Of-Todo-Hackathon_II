@@ -32,7 +32,7 @@ export default function SignupPage() {
     }
 
     try {
-      const result = await authService.register(email, password);
+      const result = await authService.signup(email, password, "New User");
 
       if (result.error) {
         setError(result.error);

@@ -1,4 +1,4 @@
-## Todo Frontend
+# Todo Frontend
 
 A Next.js frontend application for the Todo application with user authentication and task management.
 
