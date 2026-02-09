@@ -4,23 +4,17 @@ import { Task } from '@/types/task';
 
 // Determine API base URL based on environment
 const getApiBaseUrl = () => {
-  // Priority 1: Explicitly set backend URL (for production/Vercel)
-  if (process.env.NEXT_PUBLIC_BACKEND_URL && process.env.NEXT_PUBLIC_BACKEND_URL !== '') {
-    console.log('Using NEXT_PUBLIC_BACKEND_URL:', process.env.NEXT_PUBLIC_BACKEND_URL);
-    return process.env.NEXT_PUBLIC_BACKEND_URL;
+  // On production (Vercel), use relative paths that go through Next.js rewrites/proxy
+  // This avoids CORS issues by proxying requests through the Next.js server
+  if (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+    console.log('On production Vercel, using relative paths for API calls (proxied through Next.js)');
+    return ''; // Empty string means use relative paths (same origin)
   }
   
-  // Priority 2: API URL (for local development)
+  // Local development - use configured backend URL
   if (process.env.NEXT_PUBLIC_API_URL) {
     console.log('Using NEXT_PUBLIC_API_URL:', process.env.NEXT_PUBLIC_API_URL);
     return process.env.NEXT_PUBLIC_API_URL;
-  }
-  
-  // Priority 3: Check if on production (not localhost)
-  if (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-    const fallbackUrl = 'https://hafizabdullah9-phase-3-backend-todo-chatbot.hf.space';
-    console.log('On production, using fallback URL:', fallbackUrl);
-    return fallbackUrl;
   }
   
   // Default fallback for local development
@@ -29,7 +23,7 @@ const getApiBaseUrl = () => {
 };
 
 const API_BASE_URL = getApiBaseUrl();
-console.log('API_BASE_URL initialized as:', API_BASE_URL);
+console.log('API_BASE_URL initialized as:', API_BASE_URL || '(using relative paths)');
 
 class ApiClient {
   private client: AxiosInstance;
