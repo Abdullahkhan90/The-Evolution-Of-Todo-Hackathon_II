@@ -2,7 +2,24 @@ import axios, { AxiosInstance } from 'axios';
 
 import { Task } from '@/types/task';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+// Determine API base URL based on environment
+const getApiBaseUrl = () => {
+  // Use NEXT_PUBLIC_API_URL if explicitly set (for local development)
+  if (process.env.NEXT_PUBLIC_API_URL) {
+    return process.env.NEXT_PUBLIC_API_URL;
+  }
+  
+  // For Vercel production, use relative paths that will work with the backend proxy
+  if (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+    // On Vercel/production, use the backend domain or API endpoint
+    return process.env.NEXT_PUBLIC_BACKEND_URL || 'https://your-backend-url.vercel.app'; // Fallback
+  }
+  
+  // Local development fallback
+  return 'http://localhost:8000';
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 class ApiClient {
   private client: AxiosInstance;
