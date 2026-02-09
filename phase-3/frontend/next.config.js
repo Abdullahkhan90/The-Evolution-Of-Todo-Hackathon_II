@@ -1,11 +1,20 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Environment variables - frontend can access these with NEXT_PUBLIC_ prefix
   env: {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000',
+    NEXT_PUBLIC_BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000',
   },
-  // Add rewrites to proxy API calls through Next.js (avoids CORS issues)
+  
+  // Rewrites to proxy API calls through Next.js (fixes CORS issues)
   async rewrites() {
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://hafizabdullah9-phase-3-backend-todo-chatbot.hf.space';
+    // Get backend URL from environment
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || process.env.VERCEL_ENV === 'production' 
+      ? process.env.NEXT_PUBLIC_BACKEND_URL
+      : 'http://localhost:8000';
+    
+    console.log('Next.js rewrites using backend URL:', backendUrl);
+    
     return {
       beforeFiles: [
         {
@@ -22,6 +31,18 @@ const nextConfig = {
         },
       ],
     };
+  },
+  
+  // Headers for API security
+  async headers() {
+    return [
+      {
+        source: '/api/:path*',
+        headers: [
+          { key: 'Access-Control-Allow-Origin', value: '*' },
+        ],
+      },
+    ];
   },
 }
 

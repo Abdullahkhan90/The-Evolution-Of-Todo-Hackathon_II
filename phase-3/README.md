@@ -217,9 +217,45 @@ flake8 .
 
 ## Deployment
 
-For production deployment:
-1. Set up PostgreSQL database (recommended: Neon Serverless)
-2. Configure environment variables with production values
-3. Deploy backend to a cloud provider (AWS, GCP, Azure, etc.)
-4. Deploy frontend to Vercel, Netlify, or similar platform
-5. Configure domain allowlist for OpenAI ChatKit (if using)
+### Quick Start - Production Deployment
+
+See `DEPLOYMENT_GUIDE.md` for step-by-step instructions on deploying to production.
+
+**TL;DR - Deploy in 5 minutes:**
+
+1. **Backend**:
+   - Deploy to Vercel/Railway with your `DATABASE_URL` and `OPENAI_API_KEY`
+   - Note the backend URL
+
+2. **Frontend**:
+   - Add env vars: `NEXT_PUBLIC_BACKEND_URL=<your-backend-url>`
+   - Deploy to Vercel
+
+3. **Verify**: Visit your frontend URL and test login/chat
+
+### Local Development
+
+Quick setup script available:
+```bash
+# Windows
+phase-3\setup-local.bat
+
+# Then in two terminals:
+
+# Terminal 1 - Backend
+cd phase-3\backend
+venv\Scripts\activate
+python main.py
+
+# Terminal 2 - Frontend
+cd phase-3\frontend
+npm run dev
+```
+
+Visit `http://localhost:3000`
+
+### Verification
+Run the configuration checker:
+```bash
+python phase-3/verify-setup.py
+```
