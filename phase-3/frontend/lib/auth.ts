@@ -12,7 +12,8 @@ class AuthService {
       return { user: this.user, data: resp };
     } catch (e: any) {
       console.error('Login error:', e);
-      return { user: null, error: e?.message || 'Login failed' };
+      const errorMsg = e?.response?.data?.detail || e?.message || 'Login failed';
+      return { user: null, error: errorMsg };
     }
   }
 
@@ -25,7 +26,8 @@ class AuthService {
       return { user: this.user, data: resp };
     } catch (e: any) {
       console.error('Registration error:', e);
-      return { user: null, error: e?.message || 'Registration failed' };
+      const errorMsg = e?.response?.data?.detail || e?.message || 'Registration failed';
+      return { user: null, error: errorMsg };
     }
   }
 

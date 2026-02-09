@@ -4,22 +4,32 @@ import { Task } from '@/types/task';
 
 // Determine API base URL based on environment
 const getApiBaseUrl = () => {
-  // Use NEXT_PUBLIC_API_URL if explicitly set (for local development)
+  // Priority 1: Explicitly set backend URL (for production/Vercel)
+  if (process.env.NEXT_PUBLIC_BACKEND_URL && process.env.NEXT_PUBLIC_BACKEND_URL !== '') {
+    console.log('Using NEXT_PUBLIC_BACKEND_URL:', process.env.NEXT_PUBLIC_BACKEND_URL);
+    return process.env.NEXT_PUBLIC_BACKEND_URL;
+  }
+  
+  // Priority 2: API URL (for local development)
   if (process.env.NEXT_PUBLIC_API_URL) {
+    console.log('Using NEXT_PUBLIC_API_URL:', process.env.NEXT_PUBLIC_API_URL);
     return process.env.NEXT_PUBLIC_API_URL;
   }
   
-  // For Vercel production, use relative paths that will work with the backend proxy
+  // Priority 3: Check if on production (not localhost)
   if (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-    // On Vercel/production, use the backend domain or API endpoint
-    return process.env.NEXT_PUBLIC_BACKEND_URL || 'https://your-backend-url.vercel.app'; // Fallback
+    const fallbackUrl = 'https://hafizabdullah9-phase-3-backend-todo-chatbot.hf.space';
+    console.log('On production, using fallback URL:', fallbackUrl);
+    return fallbackUrl;
   }
   
-  // Local development fallback
+  // Default fallback for local development
+  console.log('Using local development URL');
   return 'http://localhost:8000';
 };
 
 const API_BASE_URL = getApiBaseUrl();
+console.log('API_BASE_URL initialized as:', API_BASE_URL);
 
 class ApiClient {
   private client: AxiosInstance;
@@ -75,21 +85,33 @@ class ApiClient {
 
   // Authentication helpers (used by some callers)
   async login(email: string, password: string) {
-    const res = await this.client.post('/auth/login', { email, password });
-    const token = res?.data?.access_token; // Backend returns access_token, not token
-    if (typeof window !== 'undefined' && token) {
-      localStorage.setItem('token', token);
+    try {
+      console.log('Logging in to:', this.client.defaults.baseURL);
+      const res = await this.client.post('/auth/login', { email, password });
+      const token = res?.data?.access_token; // Backend returns access_token, not token
+      if (typeof window !== 'undefined' && token) {
+        localStorage.setItem('token', token);
+      }
+      return res.data;
+    } catch (error: any) {
+      console.error('Login API error:', error?.response?.status, error?.response?.data);
+      throw error;
     }
-    return res.data;
   }
 
   async register(email: string, password: string, name?: string) {
-    const res = await this.client.post('/auth/signup', { email, password, name });
-    const token = res?.data?.access_token; // Backend returns access_token, not token
-    if (typeof window !== 'undefined' && token) {
-      localStorage.setItem('token', token);
+    try {
+      console.log('Registering to:', this.client.defaults.baseURL);
+      const res = await this.client.post('/auth/signup', { email, password, name });
+      const token = res?.data?.access_token; // Backend returns access_token, not token
+      if (typeof window !== 'undefined' && token) {
+        localStorage.setItem('token', token);
+      }
+      return res.data;
+    } catch (error: any) {
+      console.error('Register API error:', error?.response?.status, error?.response?.data);
+      throw error;
     }
-    return res.data;
   }
 
   async logout() {
